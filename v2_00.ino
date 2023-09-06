@@ -16,7 +16,6 @@ int pin_list[11] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10};
 int sensor_type[11] = {0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1};  // 0: long, 1: short
 
 CarControl carcontrol;
-KalmanFilter kf[NUM_SENSORS];
 Filter filter[NUM_SENSORS];
 int get_result_clk = 0;
 int adc_history[11][LOOPCOUNT];
@@ -51,8 +50,7 @@ void setup() {
 	Serial.begin(1200);
     initCarControl(&carcontrol, NUM_SENSORS);
 	for(int i=0; i<NUM_SENSORS; ++i) {
-		initFilter(&filter[i]);
-		initKalmanFilter(&kf[i], 0.0, 1.0, 0.001, 0.01);
+		initFilter(&filter[i], IR_MAX);
 	}
 	STOP;
 	CENTER;
@@ -236,8 +234,8 @@ void motor_control(void) {
 		REVERSE;
 		return;
 	}
-	float speed = carcontrol.objective[0].speed;
-	float angle = carcontrol.objective[0].angle;
+	float speed = 0.5*carcontrol.objective[0].speed + 0.5*carcontrol.objective[1].speed;
+	float angle = sign(carcontrol.objective[0].angle) == sign(carcontrol.objective[1].angle) ? carcontrol.objective[0].angle : carcontrol.objective[1].angle;
 	control_refined(speed, angle);
 }
 
