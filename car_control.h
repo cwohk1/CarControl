@@ -22,7 +22,7 @@
 #define MAX_SPEED 3300
 #define IR_THRESHOLD 40.0
 #define IR_MAX 80.0
-#define FRONT_IR_MAX 140.0
+#define FRONT_IR_MAX 500.0
 #define IR_MID 60.0
 #define IR_MIN 20.0
 #define STOP_DISTANCE 25.0
